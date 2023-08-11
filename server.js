@@ -1,6 +1,7 @@
 require("dotenv").config()
 const express = require("express")
 const bookRoutes = require("./routes/v1/books.routes")
+const genreRoutes =  require("./routes/v1/genres.routes")
 const cors = require("cors")
 const app = (express())
 const dbConnect = require("./utils/dbConnect");
@@ -17,6 +18,8 @@ dbConnect()
 // routes for books
 app.use("/api/v1/books", bookRoutes);
 
+// routes for books
+app.use("/api/v1/genres", genreRoutes);
 
 // default route for the routes that doesn't exist
 app.all("*", (req, res) => {

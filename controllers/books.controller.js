@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const Book = require("../models/Book");
+const Genre = require('../models/Genre'); 
 
 module.exports.getAllBooks = async (req, res, next) => {
   try {
@@ -9,18 +10,11 @@ module.exports.getAllBooks = async (req, res, next) => {
     let sort = req.query.sort || "rating";
     let genre = req.query.genre || "All";
 
-    const genreOptions = [
-      'Fiction',
-      'Mystery',
-      'Science Fiction',
-      'Fantasy',
-      'Romance',
-      'Thriller',
-      'Horror',
-      'Non-fiction',
-      'Biography',
-      'History'
-    ];
+   // Fetch genres from the database
+   const genresCollection = await Genre.find();
+
+   // Map the genre names from the fetched genres
+   const genreOptions = genresCollection.map(genre => genre.name);
 
 
 		genre === "All"
@@ -44,9 +38,9 @@ module.exports.getAllBooks = async (req, res, next) => {
 			.limit(limit);
 
     const total = await Book.countDocuments({
-      genre:  {$in: [...genre]},
-      name: {$regex: search, $options: "i"},
-    })    
+      genre: {$in: [...genre]},
+      title: {$regex: search, $options: "i"},
+    });    
 
     const result = {
       error: false,
