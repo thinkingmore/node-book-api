@@ -1,7 +1,8 @@
 require("dotenv").config()
 const express = require("express")
 const bookRoutes = require("./routes/v1/books.routes")
-const genreRoutes =  require("./routes/v1/genres.routes")
+const genreRoutes = require("./routes/v1/genres.routes")
+const authRoutes = require("./routes/v1/auth.routes")
 const cors = require("cors")
 const app = (express())
 const dbConnect = require("./utils/dbConnect");
@@ -14,6 +15,9 @@ app.use(cors())
 app.use(errorHandler);
 
 dbConnect()
+
+// routes for auth
+app.use("/api/v1/auth", authRoutes);
   
 // routes for books
 app.use("/api/v1/books", bookRoutes);
