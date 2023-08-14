@@ -6,6 +6,10 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  image: {
+    type: String,
+    required: [true,"please provide a valid image of your book"]
+  },
   author: {
     type: String,
     required: true

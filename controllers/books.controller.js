@@ -57,22 +57,24 @@ module.exports.getAllBooks = async (req, res, next) => {
   }
 };
 
-module.exports.saveABook = async (req, res, next) => {
+
+module.exports.addABook = async (req, res, next) => {
   try {
-    const book = req.body;
+    const bookData = req.body; // Assuming the request body contains book data
 
-    const result = await db.collection("books").insertOne(book);
-    console.log(result);
+    const book = new Book(bookData); // Create a new instance of the Book model
+    const savedBook = await book.save(); // Save the book to the database
 
-    if (!result.insertedId) {
-      return res.status(400).send({ status: false, error: "Something went wrong!" });
+    if (!savedBook) {
+      return res.status(400).send({ success: false, error: "Something went wrong!" });
     }
 
-    res.send({ success: true, message: `book added with id: ${result.insertedId}` });
+    res.status(201).send({ success: true, message: `Book added with id: ${savedBook._id}` });
   } catch (error) {
     next(error);
   }
 };
+
 
 module.exports.getBookDetail = async (req, res, next) => {
   try {
@@ -82,7 +84,7 @@ module.exports.getBookDetail = async (req, res, next) => {
       return res.status(400).json({ success: false, error: "Not a valid book id."});
     }
 
-    const book = await db.collection("books").findOne({_id: ObjectId(id)});
+    const book = await Book.findOne({ _id: id });
 
     if(!book){
       return res.status(400).json({ success: false, error: "Couldn't find a book with this id"});
@@ -98,22 +100,28 @@ module.exports.getBookDetail = async (req, res, next) => {
 module.exports.updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { title, author, published, rating } = req.body;
 
     if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, error: "Not a valid book id." });
+      return res.status(400).json({ success: false, error: 'Not a valid book id.' });
     }
 
-    const book = await db.collection("books").updateOne({ _id: ObjectId(id) }, { $set: req.body });
+    const book = await Book.findOneAndUpdate(
+      { _id: id },
+      { title, author, published, rating },
+      { new: true }
+    );
 
-    if (!book.modifiedCount) {
-      return res.status(400).json({ success: false, error: "Couldn't update the book" });
+    if (!book) {
+      return res.status(400).json({ success: false, error: "Couldn't find a book with this id" });
     }
 
-    res.status(200).json({ success: true, message: "Successfully updated the book" });
+    res.status(200).json({ success: true, data: book });
   } catch (error) {
     next(error);
   }
 };
+
 
 module.exports.deleteBook = async (req, res, next) => {
   try {
@@ -123,9 +131,9 @@ module.exports.deleteBook = async (req, res, next) => {
       return res.status(400).json({ success: false, error: "Not a valid book id." });
     }
 
-    const book = await db.collection("books").deleteOne({ _id: ObjectId(id) });
+    const deletedBook = await Book.findOneAndDelete({ _id: id });
 
-    if (!book.deletedCount) {
+    if (!deletedBook) {
       return res.status(400).json({ success: false, error: "Couldn't delete the book" });
     }
 
@@ -134,3 +142,4 @@ module.exports.deleteBook = async (req, res, next) => {
     next(error);
   }
 };
+
