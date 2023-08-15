@@ -8,13 +8,13 @@ const bookSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: [true,"please provide a valid image of your book"]
+    required: [true,"please provide a valid image of your books"]
   },
   author: {
     type: String,
     required: true
   },
-  publicationYear: {
+  year: {
     type: Number,
     required: true
   },
@@ -26,7 +26,7 @@ const bookSchema = new mongoose.Schema({
     type: Number,
     required: true
   }
-});
+},{versionKey:false});
 
 // Create the Book model using the schema
 module.exports = mongoose.model('Book', bookSchema);

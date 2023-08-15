@@ -100,7 +100,7 @@ module.exports.getBookDetail = async (req, res, next) => {
 module.exports.updateBook = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, author, published, rating } = req.body;
+    const { title, author, year, rating } = req.body;
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ success: false, error: 'Not a valid book id.' });
@@ -108,7 +108,7 @@ module.exports.updateBook = async (req, res, next) => {
 
     const book = await Book.findOneAndUpdate(
       { _id: id },
-      { title, author, published, rating },
+      { title, author, year, rating },
       { new: true }
     );
 
@@ -116,7 +116,7 @@ module.exports.updateBook = async (req, res, next) => {
       return res.status(400).json({ success: false, error: "Couldn't find a book with this id" });
     }
 
-    res.status(200).json({ success: true, data: book });
+    res.status(200).json({ success: true, data: book, message:"Updated the book" });
   } catch (error) {
     next(error);
   }
