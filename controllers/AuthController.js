@@ -34,7 +34,7 @@ module.exports.Login = async (req, res, next) => {
     if(!user){
       return res.json({message:'Incorrect password or email' }) 
     }
-    const auth = await bcrypt.compare(password,user.password)
+    const auth = bcrypt.compare(password,user.password)
     if (!auth) {
       return res.json({message:'Incorrect password or email' }) 
     }
@@ -43,7 +43,7 @@ module.exports.Login = async (req, res, next) => {
        withCredentials: true,
        httpOnly: false,
      });
-     res.status(201).json({ message: "User logged in successfully", success: true });
+     res.status(201).json({ message: "User logged in successfully", success: true,  user: { id: user._id, email: user.email, username: user.username }});
      next()
   } catch (error) {
     console.error(error);

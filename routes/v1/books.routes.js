@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const booksControllers = require("../../controllers/books.controller")
+const verifyJWT = require("../../middleware/AuthMiddleware")
 
 router
-  .route("/")
+  .route("/", )
   /**
    * @api {get} /books All books
    * @apiDescription Get all the books

@@ -2,10 +2,10 @@ const User = require("../models/User");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-module.exports.userVerification = (req, res) => {
-  const token = req.cookies.token
+const verifyJWT = (req, res) => {
+  const token = req.headers['authorization'];
   if (!token) {
-    return res.json({ status: false })
+    return res.json({ status: false, message: 'Authentication failed: Token missing' })
   }
   jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
     if (err) {
@@ -17,3 +17,5 @@ module.exports.userVerification = (req, res) => {
     }
   })
 }
+
+module.exports = verifyJWT;

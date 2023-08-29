@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const authControllers = require("../../controllers/AuthController")
-const jwtVerify = require("../../middleware/AuthMiddleware")
 
 router
-  .route("/signup", jwtVerify)
+  .route("/signup")
   /**
    * @api {post} / create user
    * @apiDescription sign up user
@@ -23,7 +22,7 @@ router
   .post(authControllers.Signup)
  
 router
-  .route("/login", jwtVerify)
+  .route("/login")
   /**
    * @api {post} / create user
    * @apiDescription sign up user

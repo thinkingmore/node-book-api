@@ -9,6 +9,7 @@ const dbConnect = require("./utils/dbConnect");
 const port = process.env.PORT || 5000
 const errorHandler = require("./middleware/errorHandler")
 
+
 // middleware 
 app.use(express.json())
 app.use(cors())
