@@ -28,8 +28,8 @@ app.use("/api/v1/genres", genreRoutes);
 
 // default route for the routes that doesn't exist
 app.all("*", (req, res) => {
-    res.send("NO route found.");
-  });
+  return res.send("NO route found.");
+});
 
 
 app.listen(port,()=>console.log(`Book list api running on ${port}`))
